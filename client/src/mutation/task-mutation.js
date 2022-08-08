@@ -1,6 +1,6 @@
 import {gql} from "@apollo/client";
 
-const createTaskDef = gql`
+export const createTaskDef = gql`
     mutation CreateTask($title: String!, $message: String!) {
         createTask(title: $title, message: $message) {
             id
@@ -8,4 +8,10 @@ const createTaskDef = gql`
     }
 `;
 
-export default createTaskDef;
+export const deleteTaskDef = gql`
+    mutation DeleteTask($taskId: String!) {
+        deleteTask(taskId: $taskId) {
+            id
+        }
+    }
+`;

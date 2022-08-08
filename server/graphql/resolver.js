@@ -7,8 +7,10 @@ module.exports = {
     },
     Mutation: {
         createTask: (root, args) => {
-            console.log(args)
-             db.tasks.push({id: uuidv4(), title: args.title, message: args.message})
+            db.tasks.push({id: uuidv4(), title: args.title, message: args.message})
+        },
+        deleteTask: (root, args) => {
+            db.tasks = db.tasks.filter(task => task.id !== args.taskId)
         },
     },
 };

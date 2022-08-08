@@ -80,3 +80,12 @@ button:hover {
     cursor: pointer;
 }
 
+.trash {
+    font-size: larger;
+}
+
+
+.trash:hover svg {
+    color: #009879;
+    cursor: pointer;
+}

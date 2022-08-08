@@ -14,5 +14,6 @@ module.exports = gql`
 
     type Mutation {
         createTask(title: String!, message: String!): Task
+        deleteTask(taskId: String!): Task
     }
 `
