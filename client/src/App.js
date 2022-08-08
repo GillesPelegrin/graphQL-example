@@ -1,33 +1,30 @@
 import './App.css';
-import client from './apollo-client'
-import React, {useEffect, useState} from "react"
-import {gql} from "@apollo/client";
+import React, {useState} from "react"
+import {useMutation, useQuery} from "@apollo/client";
+import taskQueryDef from "./queries/task-query-def";
+import createTaskDef from "./mutation/task-mutation";
 
 
 function App() {
+    const {loading, error, data, refetch} = useQuery(taskQueryDef);
+    const [createTaskMutation, createTaskResp] = useMutation(createTaskDef);
+    const [newTask, setNewTask] = useState({title: '', message: ''})
 
-    const [tasks, setTasks] = useState([])
-
-    function getTasks() {
-        client.query({
-            query: gql`
-                query getTasks {
-                    tasks {
-                        id
-                        title
-                        message
-                    }
-                }
-            `,
-        })
-        .then(({data}) => {
-            setTasks(data.tasks)
-        });
-    }
-
-    useEffect(() => {
-        getTasks()
-    }, [])
+    // function createTask() {
+    //     if (newTask.title !== '' && newTask.message !== '') {
+    //         client.query({
+    //             mutation: gql`
+    //                 mutation createTask {
+    //                     tasks {
+    //                         title
+    //                         message
+    //                     }
+    //                 }
+    //             `,
+    //         })
+    //         .catch((err) => console.log(err));
+    //     }
+    // }
 
     return (
         <div className='container'>
@@ -41,15 +38,28 @@ function App() {
                 </thead>
                 <tbody>
 
-                {tasks.map(task =>
-                    <tr key={task.id}>
-                        <td>{task.id}</td>
-                        <td>{task.title}</td>
-                        <td>{task.message}</td>
+                {!loading && data.tasks.map(({id, title, message}) =>
+                    <tr key={id}>
+                        <td>{id}</td>
+                        <td>{title}</td>
+                        <td>{message}</td>
                     </tr>
                 )}
                 </tbody>
             </table>
+
+            <form onSubmit={(e) => {
+                e.preventDefault()
+                createTaskMutation({variables: newTask})
+                    .then(() => setNewTask({title: '', message: ''}))
+                    .then((() => refetch({})));
+            }}>
+                <h1>Create Task</h1>
+
+                <input placeholder='Title' value={newTask.title} onChange={(e) => setNewTask({...newTask, title: e.target.value})}/>
+                <input placeholder='Message' value={newTask.message} onChange={(e) => setNewTask({...newTask, message: e.target.value})}/>
+                <button type='submit'> Create Task</button>
+            </form>
         </div>
     );
 }
