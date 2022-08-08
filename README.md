@@ -26,5 +26,3 @@ this will open automatically the web page.
 
 The project shows an implementation of the apollo stack.
 You can create / delete and get tasks.
-
-There is no real DB used for this example.
